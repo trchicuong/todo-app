@@ -1,20 +1,30 @@
+let deferredPrompt;
+const installButton = document.getElementById('install-btn');
+
 window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
 
-    const deferredPrompt = event;
-    const installButton = document.getElementById('install-btn');
+    deferredPrompt = event;
 
     installButton.classList.remove('hidden');
+});
 
-    installButton.addEventListener('click', () => {
-        installButton.classList.add('hidden');
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-            } else {
-                console.log('User dismissed the install prompt');
-            }
-        });
-    });
+installButton.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+        return;
+    }
+
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+        console.log('Người dùng đã đồng ý cài đặt ứng dụng');
+    } else {
+        console.log('Người dùng đã từ chối cài đặt ứng dụng');
+    }
+
+    deferredPrompt = null;
+
+    installButton.classList.add('hidden');
 });

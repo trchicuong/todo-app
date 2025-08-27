@@ -40,7 +40,6 @@ todo-app/
 ├── sound/
 │   └── ... (mp3)
 ├── .gitignore
-├── dashboard.html
 ├── index.html
 ├── LICENSE
 ├── manifest.json

@@ -14,6 +14,7 @@ class TodoApp {
         this.sortSelect = document.getElementById('sort-select');
         this.modalContainer = document.getElementById('modal-container');
         this.aiAdvisorBtn = document.getElementById('ai-advisor-btn');
+        this.notificationBtn = document.getElementById('notification-btn');
         this.statTotalEl = document.getElementById('stat-total');
         this.statPendingEl = document.getElementById('stat-pending');
         this.statCompletedEl = document.getElementById('stat-completed');
@@ -38,15 +39,57 @@ class TodoApp {
 
     init() {
         this.docElement.classList.add('dark');
-        this.requestNotificationPermission();
+        this.checkNotificationStatus();
         this.addEventListeners();
         this.renderAll();
         this.data.tasks.forEach(task => this.scheduleNotification(task));
     }
 
-    requestNotificationPermission() {
-        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-            Notification.requestPermission();
+    checkNotificationStatus() {
+        if (!('Notification' in window)) {
+            this.notificationBtn.style.display = 'none';
+            return;
+        }
+        if (Notification.permission === 'granted') {
+            this.notificationBtn.title = "Kiểm tra thông báo";
+            this.notificationBtn.classList.add('text-green-400');
+        } else {
+            this.notificationBtn.title = "Bật thông báo nhắc nhở";
+            this.notificationBtn.classList.remove('text-green-400');
+        }
+    }
+
+    handleNotificationClick() {
+        if (!('Notification' in window)) {
+            alert('Trình duyệt của bạn không hỗ trợ thông báo.');
+            return;
+        }
+
+        if (Notification.permission === 'granted') {
+            const notificationSound = new Audio('sound/notification.mp3');
+            notificationSound.play();
+            new Notification('Kiểm tra thành công!', {
+                body: 'Bạn sẽ nhận được thông báo như thế này.',
+                icon: 'images/favicon-32x32.png'
+            });
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    const notificationSound = new Audio('sound/notification.mp3');
+                    notificationSound.play();
+                    new Notification('Thông báo đã được bật!', {
+                        body: 'Ứng dụng giờ đây có thể gửi nhắc nhở cho bạn.',
+                        icon: 'images/favicon-32x32.png'
+                    });
+                }
+                this.checkNotificationStatus();
+            });
+        } else {
+            this.showConfirmModal(
+                'Thông báo đã bị chặn',
+                'Bạn đã chặn thông báo cho trang web này. Vui lòng vào phần cài đặt của trình duyệt để cho phép lại.',
+                () => { }
+            );
         }
     }
 
@@ -313,6 +356,7 @@ class TodoApp {
         this.addTaskBtn.addEventListener('click', () => this.addTask());
         this.taskInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') this.addTask(); });
         this.aiAdvisorBtn.addEventListener('click', () => this.getAIAdvice());
+        this.notificationBtn.addEventListener('click', () => this.handleNotificationClick());
         this.sortSelect.addEventListener('change', (e) => {
             this.currentSortMode = e.target.value;
             this.renderTasks();
