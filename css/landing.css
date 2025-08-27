@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap');
+
+body { 
+    font-family: 'Inter', sans-serif;
+    background-color: #020617; /* slate-950 */
+    background: linear-gradient(225deg, #020617, #0f172a, #1e293b);
+    background-size: 200% 200%;
+    animation: Gradient 20s ease infinite;
+}
+
+@keyframes Gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-section {
+    min-height: 100vh;
+}
+
+.gradient-text {
+    background: -webkit-linear-gradient(45deg, #818cf8, #c084fc, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.btn-glow {
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.6), 0 0 35px rgba(79, 70, 229, 0.4);
+}
+
+.feature-card {
+    background: rgba(30, 41, 59, 0.5); /* slate-800 with opacity */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}

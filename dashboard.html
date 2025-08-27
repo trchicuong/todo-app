@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Todo App - Phần mềm quản lý công việc</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="particles-js"></div>
+    <div class="main-content min-h-screen p-2 sm:p-4 flex items-center justify-center w-full">
+        <div
+            class="glass-container w-full max-w-6xl mx-auto rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden h-auto md:h-[95vh]">
+
+            <div
+                class="w-full md:w-1/3 lg:w-1/4 border-b md:border-b-0 md:border-r border-white/10 p-4 sm:p-6 flex flex-col bg-slate-900/20">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-100 mb-4 flex-shrink-0">Hạng mục</h2>
+                <ul id="category-list" class="space-y-2 flex-grow overflow-y-auto max-h-32 sm:max-h-40 md:max-h-full">
+                </ul>
+                <div class="flex gap-2 mt-4 flex-shrink-0">
+                    <input type="text" id="category-input" placeholder="Tên hạng mục mới..." style="width: 100%;"
+                        class="flex-grow p-2 border-2 bg-transparent border-slate-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-slate-200 text-sm">
+                    <button id="add-category-btn"
+                        class="bg-indigo-500 text-white px-3 py-2 rounded-lg font-semibold hover:bg-indigo-600 transition shadow-lg shadow-indigo-500/30 active:scale-95"><i
+                            class="fas fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div class="w-full md:w-2/3 lg:w-3/4 p-4 sm:p-6 md:p-8 flex flex-col">
+                <div class="flex items-center justify-between mb-6 flex-shrink-0">
+                    <h1 id="main-title" class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-100 truncate"></h1>
+                    <button id="ai-advisor-btn" title="AI Cố vấn"
+                        class="text-slate-400 hover:text-indigo-400 text-xl transition-transform duration-300 hover:rotate-12">
+                        <i class="fas fa-robot"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 flex-shrink-0">
+                    <div id="stat-total" class="stat-card bg-slate-900/30 p-4 rounded-xl"></div>
+                    <div id="stat-pending" class="stat-card bg-slate-900/30 p-4 rounded-xl"></div>
+                    <div id="stat-completed" class="stat-card bg-slate-900/30 p-4 rounded-xl"></div>
+                    <div id="stat-progress" class="stat-card bg-slate-900/30 p-4 rounded-xl"></div>
+                </div>
+                <div class="flex-shrink-0 mb-2">
+                    <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                        <input type="text" id="task-input" placeholder="Thêm công việc cho hạng mục này..."
+                            class="flex-grow p-3 border-2 bg-transparent border-slate-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-slate-200">
+                        <div class="flex gap-3">
+                            <div class="relative">
+                                <input type="text" id="due-date-input" placeholder="Chọn hạn chót..."
+                                    class="p-3 border-2 bg-transparent border-slate-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-slate-200 w-full sm:w-auto">
+                                <label for="due-date-input"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400"><i
+                                        class="fas fa-calendar-alt"></i></label>
+                            </div>
+                            <button id="add-task-btn"
+                                class="bg-indigo-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-indigo-600 transition shadow-lg shadow-indigo-500/30 active:scale-95"><i
+                                    class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-wrap justify-between items-center gap-y-2 mb-4 border-b border-white/10 pb-4 flex-shrink-0">
+                    <div class="flex justify-start gap-2 mb-2" id="filter-container">
+                        <button data-filter="all"
+                            class="filter-btn bg-indigo-500 text-white px-3 py-1 rounded-full text-sm">Tất cả</button>
+                        <button data-filter="pending"
+                            class="filter-btn bg-slate-700/50 text-slate-300 px-3 py-1 rounded-full text-sm">Chưa
+                            làm</button>
+                        <button data-filter="completed"
+                            class="filter-btn bg-slate-700/50 text-slate-300 px-3 py-1 rounded-full text-sm">Đã
+                            xong</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="sort-select" class="bg-transparent text-slate-400 text-sm focus:outline-none">
+                            <option value="default">Sắp xếp: Mặc định</option>
+                            <option value="priority">Sắp xếp: Ưu tiên</option>
+                            <option value="dueDate">Sắp xếp: Hạn chót</option>
+                        </select>
+                        <button id="clear-completed-btn"
+                            class="text-red-500 hover:text-red-700 text-sm font-medium transition hidden"><i
+                                class="fas fa-broom mr-1"></i> Dọn dẹp</button>
+                    </div>
+                </div>
+                <ul id="task-list" class="space-y-3 flex-grow md:overflow-y-auto pr-2"></ul>
+                <footer class="text-center text-xs text-slate-500 mt-4 flex-shrink-0">
+                    Created with ❤️ by trchicuong.
+                    <a class="gradient-text" href="https://github.com/trchicuong/todo-app" target="_blank">Xem trên GitHub</a>
+                </footer>
+            </div>
+        </div>
+        <div id="modal-container"
+            class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 hidden"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+
+    <script src="js/particles-config.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script src="js/sw-register.js"></script>
+</body>
+
+</html>

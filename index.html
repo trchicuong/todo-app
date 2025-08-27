@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Todo App - Phần mềm quản lý công việc</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <div class="main-content text-white">
+        <section class="hero-section min-h-screen flex flex-col items-center justify-center text-center p-6">
+            <div class="max-w-3xl">
+                <div class="mb-6">
+                    <span
+                        class="inline-block p-4 bg-slate-800/50 rounded-2xl shadow-lg border border-white/10 backdrop-blur-sm">
+                        <i class="fas fa-rocket text-5xl gradient-text"></i>
+                    </span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">
+                    Quản lý công việc dễ dàng - thông minh.
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10">
+                    Lên lịch, nhắc nhở, sắp xếp cuộc sống, công việc, dự án với không gian làm việc thông minh, mạnh mẽ.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="dashboard.html"
+                        class="w-full sm:w-auto bg-indigo-600 text-white font-semibold px-8 py-4 rounded-lg shadow-lg btn-glow hover:bg-indigo-700 transition-all duration-300 hover:scale-105">
+                        Bắt đầu ngay
+                    </a>
+                    <button id="install-btn"
+                        class="w-full sm:w-auto bg-white/10 border border-white/20 text-white font-semibold px-8 py-4 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105 hidden">
+                        <i class="fas fa-download mr-2"></i>
+                        Cài đặt ứng dụng
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section class="w-full max-w-5xl mx-auto py-20">
+            <h2 class="text-3xl font-bold text-center mb-12">Tất cả trong một nền tảng</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card p-8 rounded-2xl text-center">
+                    <div class="mb-4 inline-block p-3 bg-indigo-500/20 rounded-xl"><i
+                            class="fas fa-wand-magic-sparkles text-2xl text-indigo-400"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Cố vấn AI</h3>
+                    <p class="text-slate-400">Nhận lời khuyên thông minh để tối ưu hóa quy trình làm việc.</p>
+                </div>
+                <div class="feature-card p-8 rounded-2xl text-center">
+                    <div class="mb-4 inline-block p-3 bg-pink-500/20 rounded-xl"><i
+                            class="fas fa-cloud-bolt text-2xl text-pink-400"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Hoạt động Offline</h3>
+                    <p class="text-slate-400">Làm việc mọi lúc mọi nơi, ngay cả khi không có kết nối mạng.</p>
+                </div>
+                <div class="feature-card p-8 rounded-2xl text-center">
+                    <div class="mb-4 inline-block p-3 bg-emerald-500/20 rounded-xl"><i
+                            class="fas fa-mobile-screen-button text-2xl text-emerald-400"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Tương thích hoàn toàn</h3>
+                    <p class="text-slate-400">Trải nghiệm mượt mà và đồng nhất trên mọi thiết bị.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="w-full max-w-5xl mx-auto py-8 text-center text-slate-500 border-t border-white/10">
+            Created with ❤️ by trchicuong.
+            <a class="gradient-text" href="https://github.com/trchicuong/todo-app" target="_blank">Xem trên GitHub</a>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/landing.js"></script>
+    <script src="js/sw-register.js"></script>
+    </script>
+</body>
+
+</html>

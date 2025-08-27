@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --font-sans: 'Inter', sans-serif;
+    --container-light: rgba(255, 255, 255, 0.6);
+    --container-dark: rgba(30, 41, 59, 0.6);
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: linear-gradient(-45deg, #33cc33, #ff0000, #3333ff, #ffff00);
+    background-size: 400% 400%;
+    animation: Gradient 15s ease infinite;
+}
+
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.gradient-text {
+    background: -webkit-linear-gradient(45deg, #818cf8, #c084fc, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+}
+
+.glass-container {
+    background: var(--container-light);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-container {
+    background: var(--container-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.priority-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.priority-dot:hover {
+    transform: scale(1.3);
+}
+
+.priority-high {
+    background-color: #ef4444;
+}
+
+.priority-medium {
+    background-color: #f97316;
+}
+
+.priority-low {
+    background-color: #22c55e;
+}
+
+.task-item.dragging {
+    opacity: 0.4;
+    border: 2px dashed var(--primary);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.task-item,
+.modal-box,
+.category-item,
+.stat-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.category-item.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.dark .category-item.active {
+    background-color: var(--primary-hover);
+}
+
+#task-list::-webkit-scrollbar,
+#category-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#task-list::-webkit-scrollbar-track,
+#category-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#task-list::-webkit-scrollbar-thumb,
+#category-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.dark #task-list::-webkit-scrollbar-thumb,
+.dark #category-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* CSS cho định dạng Markdown của AI */
+.prose h1,
+.prose h2,
+.prose h3 {
+    margin-top: 1.25em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+.prose h1 {
+    font-size: 1.5em;
+}
+
+.prose h2 {
+    font-size: 1.25em;
+}
+
+.prose h3 {
+    font-size: 1.1em;
+}
+
+.prose p {
+    margin-bottom: 1em;
+}
+
+.prose ul {
+    list-style-type: disc;
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+.prose li {
+    margin-bottom: 0.25em;
+}
+
+.prose hr {
+    margin: 20px 0px;
+}
+
+.prose strong {
+    font-weight: 700;
+}
+
+.prose a {
+    color: #818cf8;
+    text-decoration: underline;
+}
+
+.dark #sort-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+#modal-content::-webkit-scrollbar {
+    width: 4px
+}
+
+#modal-content::-webkit-scrollbar-track {
+    border-radius: 10px
+}
+
+#modal-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8e2de2, #4facfe);
+    border-radius: 10px
+}
+
+#modal-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #a445b2, #00f2fe)
+}
