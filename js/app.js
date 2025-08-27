@@ -30,6 +30,9 @@ class TodoApp {
         this.currentSortMode = 'default';
         this.notificationTimeouts = {};
 
+        this.notificationSound = new Audio('sound/notification.mp3');
+        this.notificationSound.preload = 'auto';
+
         this.flatpickrInstance = flatpickr(this.dueDateInput, {
             enableTime: true,
             dateFormat: "d/m/Y H:i",
@@ -66,20 +69,22 @@ class TodoApp {
         }
 
         if (Notification.permission === 'granted') {
-            const notificationSound = new Audio('sound/notification.mp3');
-            notificationSound.play();
+            this.notificationSound.currentTime = 0;
+            this.notificationSound.play();
             new Notification('Kiểm tra thành công!', {
                 body: 'Bạn sẽ nhận được thông báo như thế này.',
-                icon: 'images/favicon-32x32.png'
+                icon: 'images/favicon-32x32.png',
+                silent: true
             });
         } else if (Notification.permission !== 'denied') {
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
-                    const notificationSound = new Audio('sound/notification.mp3');
-                    notificationSound.play();
+                    this.notificationSound.currentTime = 0;
+                    this.notificationSound.play();
                     new Notification('Thông báo đã được bật!', {
                         body: 'Ứng dụng giờ đây có thể gửi nhắc nhở cho bạn.',
-                        icon: 'images/favicon-32x32.png'
+                        icon: 'images/favicon-32x32.png',
+                        silent: true
                     });
                 }
                 this.checkNotificationStatus();
@@ -103,11 +108,12 @@ class TodoApp {
         if (timeDiff > 0) {
             this.notificationTimeouts[task.id] = setTimeout(() => {
                 if (Notification.permission === 'granted') {
-                    const notificationSound = new Audio('sound/notification.mp3');
-                    notificationSound.play();
+                    this.notificationSound.currentTime = 0;
+                    this.notificationSound.play();
                     new Notification('Nhắc nhở công việc!', {
                         body: `Đã đến hạn cho công việc: "${task.text}"`,
-                        icon: 'images/favicon-32x32.png'
+                        icon: 'images/favicon-32x32.png',
+                        silent: true
                     });
                 }
                 delete this.notificationTimeouts[task.id];
