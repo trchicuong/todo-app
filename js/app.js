@@ -35,6 +35,7 @@ class TodoApp {
         this.priorities = ['low', 'medium', 'high'];
         this.notificationTimeouts = {};
         this.flatpickrInstance = null;
+        this.draggedTaskId = null;
 
         // --- Sound ---
         this.notificationSound = new Audio('sound/notification.mp3');
@@ -290,10 +291,23 @@ class TodoApp {
         });
         this.taskList.addEventListener('drop', e => {
             e.preventDefault();
+
+            // BUG FIX: If nothing valid is being dragged, do nothing.
+            if (this.draggedTaskId === null) {
+                return;
+            }
+
             this.currentSortMode = 'default';
             this.sortSelect.value = 'default';
             const afterElement = this.getDragAfterElement(this.taskList, e.clientY);
             const draggedTaskIndex = this.data.tasks.findIndex(t => t.id === this.draggedTaskId);
+
+            // BUG FIX: If the dragged task somehow doesn't exist in our data, do nothing.
+            if (draggedTaskIndex < 0) {
+                this.draggedTaskId = null; // Reset dragged id
+                return;
+            }
+
             const [draggedTask] = this.data.tasks.splice(draggedTaskIndex, 1);
             if (afterElement == null) {
                 this.data.tasks.push(draggedTask);
