@@ -1,20 +1,3 @@
-// Import CSS
-import 'flatpickr/dist/flatpickr.min.css';
-import 'font-awesome/css/font-awesome.min.css';
-import '../css/style.css';
-
-// Import JS libraries
-import flatpickr from 'flatpickr';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
-import confetti from 'canvas-confetti';
-
-// Gán các thư viện vào window để code gốc không bị lỗi
-window.flatpickr = flatpickr;
-window.marked = marked;
-window.DOMPurify = DOMPurify;
-window.confetti = confetti;
-
 class TodoApp {
     constructor() {
         // --- DOM Elements ---
@@ -55,7 +38,7 @@ class TodoApp {
         this.draggedTaskId = null;
 
         // --- Sound ---
-        this.notificationSound = new Audio('/sound/notification.mp3'); // Đường dẫn từ thư mục public
+        this.notificationSound = new Audio('sound/notification.mp3');
         this.notificationSound.preload = 'auto';
     }
 
@@ -309,15 +292,19 @@ class TodoApp {
         this.taskList.addEventListener('drop', e => {
             e.preventDefault();
 
-            if (this.draggedTaskId === null) { return; }
+            // BUG FIX: If nothing valid is being dragged, do nothing.
+            if (this.draggedTaskId === null) {
+                return;
+            }
 
             this.currentSortMode = 'default';
             this.sortSelect.value = 'default';
             const afterElement = this.getDragAfterElement(this.taskList, e.clientY);
             const draggedTaskIndex = this.data.tasks.findIndex(t => t.id === this.draggedTaskId);
 
+            // BUG FIX: If the dragged task somehow doesn't exist in our data, do nothing.
             if (draggedTaskIndex < 0) {
-                this.draggedTaskId = null;
+                this.draggedTaskId = null; // Reset dragged id
                 return;
             }
 
@@ -550,13 +537,13 @@ class TodoApp {
         if (Notification.permission === 'granted') {
             this.notificationSound.currentTime = 0;
             this.notificationSound.play();
-            new Notification('Kiểm tra thành công!', { body: 'Bạn sẽ nhận được thông báo như thế này.', icon: '/images/apple-touch-icon.png', silent: true });
+            new Notification('Kiểm tra thành công!', { body: 'Bạn sẽ nhận được thông báo như thế này.', icon: 'images/apple-touch-icon.png', silent: true });
         } else if (Notification.permission !== 'denied') {
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
                     this.notificationSound.currentTime = 0;
                     this.notificationSound.play();
-                    new Notification('Thông báo đã được bật!', { body: 'Ứng dụng giờ đây có thể gửi nhắc nhở cho bạn.', icon: '/images/apple-touch-icon.png', silent: true });
+                    new Notification('Thông báo đã được bật!', { body: 'Ứng dụng giờ đây có thể gửi nhắc nhở cho bạn.', icon: 'images/apple-touch-icon.png', silent: true });
                 }
                 this.updateNotificationSettingUI(btn);
             });
@@ -575,7 +562,7 @@ class TodoApp {
                 if (Notification.permission === 'granted') {
                     this.notificationSound.currentTime = 0;
                     this.notificationSound.play();
-                    new Notification('Nhắc nhở công việc!', { body: `Đã đến hạn cho công việc: "${task.text}"`, icon: '/images/apple-touch-icon.png', silent: true });
+                    new Notification('Nhắc nhở công việc!', { body: `Đã đến hạn cho công việc: "${task.text}"`, icon: 'images/apple-touch-icon.png', silent: true });
                 }
                 delete this.notificationTimeouts[task.id];
             }, timeDiff);
@@ -591,9 +578,9 @@ class TodoApp {
 
     // --- AI Advisor ---
     parseMarkdown(markdown) {
-        if (!markdown || !window.marked || !window.DOMPurify) return markdown.replace(/\n/g, '<br>');
-        window.marked.setOptions({ breaks: true, gfm: true });
-        return window.DOMPurify.sanitize(window.marked.parse(markdown));
+        if (!markdown || typeof marked === 'undefined' || typeof DOMPurify === 'undefined') return markdown.replace(/\n/g, '<br>');
+        marked.setOptions({ breaks: true, gfm: true });
+        return DOMPurify.sanitize(marked.parse(markdown));
     }
 
     async getAIAdvice() {
@@ -641,7 +628,6 @@ class TodoApp {
     }
 }
 
-// Chạy ứng dụng sau khi DOM đã tải xong
 document.addEventListener('DOMContentLoaded', () => {
     const app = new TodoApp();
     app.init();

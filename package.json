@@ -11,16 +11,5 @@
   "devDependencies": {
     "vite": "^7.1.2",
     "vite-plugin-pwa": "^1.0.3"
-  },
-  "dependencies": {
-    "autoprefixer": "^10.4.21",
-    "canvas-confetti": "^1.9.3",
-    "dompurify": "^3.2.6",
-    "flatpickr": "^4.6.13",
-    "font-awesome": "^4.7.0",
-    "marked": "^16.2.1",
-    "particles.js": "^2.0.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.13"
   }
 }
