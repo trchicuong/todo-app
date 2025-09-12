@@ -1,17 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap');
-
-body { 
+body {
     font-family: 'Inter', sans-serif;
-    background-color: #020617; /* slate-950 */
+    background-color: #020617;
+    /* slate-950 */
     background: linear-gradient(225deg, #020617, #0f172a, #1e293b);
     background-size: 200% 200%;
     animation: Gradient 20s ease infinite;
 }
 
 @keyframes Gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 #particles-js {
@@ -43,7 +50,8 @@ body {
 }
 
 .feature-card {
-    background: rgba(30, 41, 59, 0.5); /* slate-800 with opacity */
+    background: rgba(30, 41, 59, 0.5);
+    /* slate-800 with opacity */
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
