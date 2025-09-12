@@ -58,11 +58,12 @@ Netlify, Vercel,...
 todo-app/
 ├── public/
 │   ├── images/
-│   └── sound/
+│   ├── sound/
+│   └── particles.js
 ├── src/
 │   ├── css/
-│   │   ├── input.css
-│   │   └── ...
+│   │   ├── landing.css
+│   │   └── style.css
 │   └── js/
 │       ├── app.js
 │       └── landing.js
@@ -74,7 +75,6 @@ todo-app/
 ├── package-lock.json
 ├── package.json
 ├── README.md
-├── tailwind.config.js
 └── vite.config.js
 ```
 ---
