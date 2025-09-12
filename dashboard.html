@@ -6,22 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Todo App - Phần mềm quản lý công việc</title>
-
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-
-    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <meta name="theme-color" content="#000000" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/src/css/input.css">
+    <script type="module" src="/src/js/app.js"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800">
@@ -30,7 +20,7 @@
             class="w-64 bg-white border-r border-slate-200 flex-shrink-0 absolute inset-y-0 left-0 md:relative md:translate-x-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-30 flex flex-col">
             <div class="p-6">
                 <div class="flex items-center space-x-2.5">
-                    <img class="h-7 w-7 text-indigo-600" src="images/android-chrome-512x512.png" alt="">
+                    <img class="h-7 w-7 text-indigo-600" src="/images/android-chrome-512x512.png" alt="">
                     <h1 class="text-xl font-bold text-slate-900">Todo App</h1>
                 </div>
             </div>
@@ -48,7 +38,8 @@
                 </div>
             </nav>
             <div class="p-6">
-                <button id="settings-btn" href="#" class="flex items-center text-sm text-slate-600 hover:text-slate-900">
+                <button id="settings-btn" href="#"
+                    class="flex items-center text-sm text-slate-600 hover:text-slate-900">
                     <i class="fa-solid fa-cog w-6 text-center"></i>
                     <span class="ml-3">Cài đặt</span>
                 </button>
@@ -66,7 +57,8 @@
                         <div class="min-w-0">
                             <h1 id="main-title" class="text-2xl md:text-3xl font-bold text-slate-900 truncate">Công việc
                             </h1>
-                            <p id="greeting-subtitle" class="text-slate-500 mt-1 text-sm md:text-base truncate">Chào mừng trở lại!.</p>
+                            <p id="greeting-subtitle" class="text-slate-500 mt-1 text-sm md:text-base truncate">Chào
+                                mừng trở lại!.</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-1 flex-shrink-0 ml-4">
@@ -141,11 +133,7 @@
 
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
 
-    <div id="modal-container" class="fixed inset-0 z-50 items-center justify-center hidden">
-    </div>
-
-    <script src="js/app.js" defer></script>
-    <script src="js/sw-register.js"></script>
+    <div id="modal-container" class="fixed inset-0 z-50 items-center justify-center hidden"></div>
 </body>
 
 </html>
