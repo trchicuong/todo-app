@@ -69,6 +69,8 @@ body {
 .task-item {
     position: relative;
     transition: all 0.25s ease;
+    touch-action: none;
+    -webkit-touch-callout: none;
 }
 
 .task-item:hover {
