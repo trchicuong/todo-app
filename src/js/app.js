@@ -124,6 +124,63 @@ class TodoApp {
         this.clearCompletedBtn.classList.toggle('hidden', !hasCompletedTasks);
     }
 
+    handleTouchStart(e) {
+        const taskItem = e.target.closest('.task-item');
+        if (taskItem) {
+            this.draggedTaskId = Number(taskItem.dataset.id);
+            setTimeout(() => taskItem.classList.add('dragging'), 0);
+        }
+    }
+
+    handleTouchMove(e) {
+        if (this.draggedTaskId === null) return;
+
+        e.preventDefault();
+
+        const dragging = document.querySelector('.dragging');
+        if (!dragging) return;
+
+        const touchLocation = e.targetTouches[0];
+
+        const afterElement = this.getDragAfterElement(this.taskList, touchLocation.clientY);
+
+        if (afterElement == null) {
+            this.taskList.appendChild(dragging);
+        } else {
+            this.taskList.insertBefore(dragging, afterElement);
+        }
+    }
+
+    handleTouchEnd(e) {
+        if (this.draggedTaskId === null) return;
+
+        const dragging = document.querySelector('.dragging');
+        if (dragging) {
+            dragging.classList.remove('dragging');
+        }
+
+        this.currentSortMode = 'default';
+        this.sortSelect.value = 'default';
+
+        const taskElements = [...this.taskList.querySelectorAll('.task-item')];
+        const newOrderedTasks = [];
+
+        const otherCategoryTasks = this.data.tasks.filter(t => t.categoryId !== this.data.activeCategoryId);
+
+        taskElements.forEach(el => {
+            const taskId = Number(el.dataset.id);
+            const task = this.data.tasks.find(t => t.id === taskId);
+            if (task) {
+                newOrderedTasks.push(task);
+            }
+        });
+
+        this.data.tasks = [...newOrderedTasks, ...otherCategoryTasks];
+
+        this.draggedTaskId = null;
+        this.saveData();
+    }
+
     createTaskElement(task) {
         const li = document.createElement('li');
         const isOverdue = task.dueDate && !task.completed && new Date(task.dueDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) < new Date();
@@ -319,6 +376,10 @@ class TodoApp {
             this.saveData();
             this.renderTasks();
         });
+
+        this.taskList.addEventListener('touchstart', e => this.handleTouchStart(e), { passive: false });
+        this.taskList.addEventListener('touchmove', e => this.handleTouchMove(e), { passive: false });
+        this.taskList.addEventListener('touchend', e => this.handleTouchEnd(e));
 
         this.filterContainer.addEventListener('click', e => {
             const target = e.target.closest('.filter-btn');
