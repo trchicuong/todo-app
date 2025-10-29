@@ -645,6 +645,45 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 body.dark-mode .select-wrapper::after {
   color: #64748b;
 }
+/* Dark mode: Help modal contrast fixes */
+body.dark-mode #modal-container .text-slate-700 {
+  color: #cbd5e1 !important; /* improve body text contrast */
+}
+body.dark-mode .text-slate-700 {
+  color: #cbd5e1 !important; /* global safety for places outside modal */
+}
+body.dark-mode #modal-container .border-slate-200 {
+  border-color: #334155 !important; /* align borders with dark palette */
+}
+/* Tabs in Help modal */
+body.dark-mode #modal-container .help-tab-btn {
+  background-color: #1a2332 !important; /* slate-900-ish */
+  color: #e2e8f0 !important; /* slate-100 */
+  border-color: #334155 !important; /* slate-700 */
+}
+body.dark-mode #modal-container .help-tab-btn:hover {
+  background-color: #243044 !important; /* hover slightly lighter */
+}
+body.dark-mode #modal-container .help-tab-btn.active,
+body.dark-mode #modal-container .help-tab-btn.bg-indigo-50 {
+  /* override JS-applied class */
+  background-color: rgba(99, 102, 241, 0.22) !important; /* indigo tint */
+  color: #e0e7ff !important; /* indigo-100 */
+  border-color: #6366f1 !important; /* indigo-500 */
+}
+/* Inline code and kbd in Help modal */
+body.dark-mode #modal-container code,
+body.dark-mode #modal-container kbd {
+  background-color: #0b1220; /* very dark background */
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+/* Lists readability in Help modal */
+body.dark-mode #modal-container .help-panel li {
+  color: #cbd5e1; /* ensure bullets text inherits readable color */
+}
 /* Dark mode: Quick Add voice + examples buttons */
 body.dark-mode #quick-add-voice-btn,
 body.dark-mode #quick-add-examples-btn {
