@@ -2816,11 +2816,29 @@ class TodoApp {
   }
 
   async startVoiceQuickAdd() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      this.showConfirmModal('Không hỗ trợ', 'Trình duyệt không hỗ trợ nhập giọng nói.', () => {});
+    // Hybrid approach: try Web Speech API first; if unavailable or fails, fallback to recording + server-side STT
+    const btn = this.quickAddVoiceBtn;
+    const stopRecordingUI = () => {
+      if (btn) {
+        btn.classList.remove('animate-pulse', 'text-red-500');
+        btn.title = 'Thêm bằng giọng nói';
+      }
+      if (this.voiceStopTimer) {
+        clearTimeout(this.voiceStopTimer);
+        this.voiceStopTimer = null;
+      }
+    };
+
+    // Toggle stop if currently recording via MediaRecorder
+    if (this.mediaRecorder && this.voiceRecording) {
+      try {
+        if (this.mediaRecorder.state === 'recording') this.mediaRecorder.stop();
+      } catch (_) {}
+      stopRecordingUI();
+      this.voiceRecording = false;
       return;
     }
+
     if (!window.isSecureContext) {
       this.showConfirmModal(
         'Yêu cầu HTTPS',
@@ -2829,72 +2847,157 @@ class TodoApp {
       );
       return;
     }
-    // Preflight: ask for microphone permission to avoid audio-capture errors (common on Brave)
+
+    // Preflight mic permission (common blockers on mobile)
     try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // Immediately stop the tracks; SpeechRecognition will capture separately
+      if (navigator.mediaDevices?.getUserMedia) {
+        const s = await navigator.mediaDevices.getUserMedia({ audio: true });
         try {
-          stream.getTracks().forEach((t) => t.stop());
+          // Don't keep it open for Web Speech path
+          s.getTracks().forEach((t) => t.stop());
         } catch (_) {}
       }
-    } catch (permErr) {
+    } catch (_) {
       this.showConfirmModal(
         'Không truy cập được micro',
-        'Hãy cấp quyền micro cho trang này (bấm vào biểu tượng ổ khóa > Site settings > Microphone > Allow).',
+        'Hãy cấp quyền micro cho trang này (biểu tượng ổ khóa > Site settings > Microphone > Allow).',
+        () => {},
+      );
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      try {
+        const rec = new SpeechRecognition();
+        rec.lang = 'vi-VN';
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
+        if (btn) {
+          btn.classList.add('animate-pulse', 'text-red-500');
+          btn.title = 'Đang nghe... bấm để dừng';
+        }
+
+        rec.onresult = (event) => {
+          const transcript = event.results?.[0]?.[0]?.transcript || '';
+          if (this.quickAddInput) this.quickAddInput.value = transcript;
+          this.addQuickTaskFromRaw(transcript);
+        };
+        rec.onerror = (e) => {
+          stopRecordingUI();
+          // Fallback to recorder on error (e.g., unsupported locale)
+          this.recordAndTranscribeFallback();
+        };
+        rec.onend = () => {
+          stopRecordingUI();
+        };
+        rec.start();
+        return;
+      } catch (err) {
+        console.warn('Web Speech failed, trying recorder fallback:', err);
+        // continue to fallback
+      }
+    }
+
+    // Fallback: record with MediaRecorder and send to server for STT
+    this.recordAndTranscribeFallback();
+  }
+
+  async recordAndTranscribeFallback() {
+    const btn = this.quickAddVoiceBtn;
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      this.showConfirmModal(
+        'Không hỗ trợ',
+        'Thiết bị không hỗ trợ ghi âm chuẩn web. Vui lòng dùng Chrome/Edge mới hoặc cập nhật hệ điều hành.',
+        () => {},
+      );
+      return;
+    }
+
+    const serverUrl = import.meta.env.VITE_PUSH_SERVER_URL; // dùng chung base functions
+    if (!serverUrl) {
+      this.showConfirmModal(
+        'Thiếu cấu hình',
+        'Chưa cấu hình VITE_PUSH_SERVER_URL để gọi chức năng chuyển giọng nói thành văn bản.',
         () => {},
       );
       return;
     }
 
     try {
-      const rec = new SpeechRecognition();
-      rec.lang = 'vi-VN';
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      const btn = this.quickAddVoiceBtn;
-      if (btn) btn.classList.add('animate-pulse', 'text-red-500');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Pick best supported mime type across browsers
+      const candidates = [
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/ogg;codecs=opus',
+        'audio/mp4',
+      ];
+      const mimeType = candidates.find((t) => MediaRecorder.isTypeSupported?.(t)) || '';
+      const mr = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const chunks = [];
+      this.mediaRecorder = mr;
+      this.mediaStream = stream;
+      this.voiceRecording = true;
+      if (btn) {
+        btn.classList.add('animate-pulse', 'text-red-500');
+        btn.title = 'Đang ghi... bấm để dừng';
+      }
 
-      rec.onresult = (event) => {
-        const transcript = event.results?.[0]?.[0]?.transcript || '';
-        if (this.quickAddInput) this.quickAddInput.value = transcript;
-        this.addQuickTaskFromRaw(transcript);
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
       };
-
-      rec.onerror = (e) => {
-        let msg = 'Không thể nhận dạng giọng nói. Thử lại nhé.';
-        switch (e?.error) {
-          case 'not-allowed':
-          case 'service-not-allowed':
-            msg =
-              'Truy cập micro hoặc dịch vụ nhận dạng bị từ chối. Hãy cho phép micro cho trang và thử lại.';
-            break;
-          case 'audio-capture':
-            msg = 'Không tìm thấy micro. Hãy kiểm tra thiết bị ghi âm và thử lại.';
-            break;
-          case 'no-speech':
-            msg = 'Không nghe thấy âm thanh. Hãy nói to, rõ hơn và thử lại.';
-            break;
-          case 'network':
-            msg =
-              'Dịch vụ nhận dạng bị chặn bởi trình duyệt hoặc các tiện ích mở rộng, vui lòng tắt các tiện ích chặn và thử lại.';
-            break;
+      mr.onstop = async () => {
+        try {
+          stream.getTracks().forEach((t) => t.stop());
+        } catch (_) {}
+        this.voiceRecording = false;
+        if (btn) {
+          btn.classList.remove('animate-pulse', 'text-red-500');
+          btn.title = 'Thêm bằng giọng nói';
         }
-        this.showConfirmModal('Lỗi giọng nói', msg, () => {});
+        if (this.voiceStopTimer) {
+          clearTimeout(this.voiceStopTimer);
+          this.voiceStopTimer = null;
+        }
+        if (!chunks.length) return;
+        const blob = new Blob(chunks, { type: mimeType || 'audio/webm' });
+        const fd = new FormData();
+        fd.append('audio', blob, `audio.${(mimeType || 'webm').split('/')[1] || 'webm'}`);
+        try {
+          const res = await fetch(`${serverUrl.replace(/\/$/, '')}/transcribe`, {
+            method: 'POST',
+            body: fd,
+          });
+          if (!res.ok) throw new Error(`Transcribe error ${res.status}`);
+          const json = await res.json();
+          const text = (json && json.text) || '';
+          if (text) {
+            if (this.quickAddInput) this.quickAddInput.value = text;
+            this.addQuickTaskFromRaw(text);
+          } else {
+            this.showConfirmModal(
+              'Không nhận dạng được',
+              'Không thu được nội dung hợp lệ.',
+              () => {},
+            );
+          }
+        } catch (err) {
+          console.warn('Transcribe request failed:', err);
+          this.showConfirmModal('Lỗi', 'Không thể chuyển giọng nói thành văn bản.', () => {});
+        }
       };
 
-      rec.onend = () => {
-        if (btn) btn.classList.remove('animate-pulse', 'text-red-500');
-      };
-
-      rec.start();
+      mr.start(250); // small timeslice to emit chunks
+      // Auto-stop after 15s so file không quá dài
+      this.voiceStopTimer = setTimeout(() => {
+        try {
+          if (mr.state === 'recording') mr.stop();
+        } catch (_) {}
+      }, 15000);
     } catch (err) {
-      console.warn('Voice init error:', err);
-      this.showConfirmModal(
-        'Lỗi',
-        'Không thể khởi tạo nhận dạng giọng nói trên trình duyệt này.',
-        () => {},
-      );
+      console.warn('MediaRecorder fallback failed:', err);
+      this.showConfirmModal('Lỗi', 'Không thể bắt đầu ghi âm trên thiết bị này.', () => {});
     }
   }
   computeNextDueDate(dueDateStr, recurrence) {

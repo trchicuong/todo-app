@@ -16,7 +16,7 @@ export default async (req, context) => {
       return new Response(JSON.stringify({ error: 'Invalid subscription' }), { status: 400 });
     }
 
-    webpush.setVapidDetails('mailto:admin@example.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+    webpush.setVapidDetails('mailto:pokekeeze2@gmail.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
     const data = payload || {
       title: 'Todo App',
