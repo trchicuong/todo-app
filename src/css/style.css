@@ -645,6 +645,31 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 body.dark-mode .select-wrapper::after {
   color: #64748b;
 }
+/* Dark mode: Quick Add voice + examples buttons */
+body.dark-mode #quick-add-voice-btn,
+body.dark-mode #quick-add-examples-btn {
+  background-color: #334155 !important; /* slate-700 */
+  color: #e2e8f0 !important; /* slate-100 */
+  border: 1px solid #475569 !important; /* slate-600 */
+}
+body.dark-mode #quick-add-voice-btn:hover,
+body.dark-mode #quick-add-examples-btn:hover {
+  background-color: #3b475a !important; /* hover a bit lighter */
+}
+
+/* Dark mode: Quick Add examples dropdown */
+body.dark-mode #quick-add-examples-menu {
+  background-color: #1e293b !important; /* slate-800 */
+  border-color: #334155 !important; /* slate-700 */
+}
+body.dark-mode #quick-add-examples-menu .example-item {
+  background-color: #334155 !important; /* slate-700 */
+  color: #e2e8f0 !important; /* slate-100 */
+  border: 1px solid #475569 !important; /* slate-600 */
+}
+body.dark-mode #quick-add-examples-menu .example-item:hover {
+  background-color: #3b475a !important; /* slightly lighter on hover */
+}
 /* Preload dark theme to prevent white flash before JS applies body.dark-mode */
 html[data-theme='dark'] body {
   background-color: #0f172a;
