@@ -1,0 +1,15 @@
+[build]
+  functions = "netlify/functions"
+  publish = "dist"
+
+# Optional: Force SPA fallback for unknown routes (uncomment if needed)
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
+
+# Ensure notification clicks open the dashboard page
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 200

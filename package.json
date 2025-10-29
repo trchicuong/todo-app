@@ -1,12 +1,15 @@
 {
   "name": "todo-app-vite",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
+  },
+  "dependencies": {
+    "web-push": "^3.5.0"
   },
   "devDependencies": {
     "vite": "^7.1.2",
